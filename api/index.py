@@ -49,7 +49,6 @@ ORGANIZATION = get_organization_from_config_map()
 PROJECT_ID = get_project_from_config_map()
 DB = open_firestore_connection(PROJECT_ID)
 NAMESPACE = os.getenv("NAMESPACE", "")
-SERVICE_NAMESPACE = os.getenv("SERVICE_NAMESPACE", "")
 ## if, for example, the data is account_id, count_logins_last_30_days
 ## with account_id being the primary key, then this would get the most
 ## recent data for this account_id
