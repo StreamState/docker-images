@@ -10,6 +10,7 @@ from process import process
 import json
 from streamstate_utils.structs import FileStruct, InputStruct
 from streamstate_utils.utils import get_folder_location
+from pathlib import Path
 
 
 def dev_from_file(
@@ -20,9 +21,10 @@ def dev_from_file(
     spark = SparkSession.builder.appName(app_name).getOrCreate()
     base_folder = "."
     for input in inputs:
-        os.makedirs(
+        Path(
             os.path.join(base_folder, get_folder_location(app_name, input.topic))
-        )
+        ).mkdir(parents=True, exist_ok=True)
+
     df = dev_file_wrapper(app_name, max_file_age, base_folder, process, inputs, spark)
     write_console(df, "/tmp")
 
