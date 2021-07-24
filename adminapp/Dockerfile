@@ -9,7 +9,7 @@ RUN pip3 install -r requirements.txt
 COPY index.py /opt/adminapp/work-dir/index.py
 ADD dist.zip dist.zip
 RUN unzip dist.zip -d public
-RUN apt-get uninstall -y unzip 
+RUN apt-get remove -y unzip 
 RUN rm dist.zip
 RUN chown -R adminapp:adminapp /opt/adminapp/work-dir
 USER adminapp
