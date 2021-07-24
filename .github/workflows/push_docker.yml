@@ -37,10 +37,7 @@ jobs:
         uses: mathieudutour/github-tag-action@v5.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-          asset_id=$(curl -H "Accept: application/vnd.github.v3.raw" -L -J --header "Authorization: token ${{ secrets.ACCESS_TOKEN }}" https://api.github.com/repos/StreamState/streamstate-ui-admin/releases | jq ". | map(select(.tag_name == \"v0.0.8\"))[0].assets | map(select(.name == \"dist.zip\"))[0].id")
-          echo $asset_id
-          curl -H "Accept: application/octet-stream" -L -J --header "Authorization: token ${{ secrets.ACCESS_TOKEN }}" https://api.github.com/repos/StreamState/streamstate-ui-admin/releases/assets/$asset_id -o dist.zip
+      
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Login to DockerHub
@@ -49,7 +46,11 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: _json_key_base64
           password: ${{ secrets.GCP_SA_KEY }}
-
+      - run: |
+          asset_id=$(curl -H "Accept: application/vnd.github.v3.raw" -L -J --header "Authorization: token ${{ secrets.ACCESS_TOKEN }}" https://api.github.com/repos/StreamState/streamstate-ui-admin/releases | jq ". | map(select(.tag_name == \"v0.0.8\"))[0].assets | map(select(.name == \"dist.zip\"))[0].id")
+          echo $asset_id
+          curl -H "Accept: application/octet-stream" -L -J --header "Authorization: token ${{ secrets.ACCESS_TOKEN }}" https://api.github.com/repos/StreamState/streamstate-ui-admin/releases/assets/$asset_id -o dist.zip
+          ls -la
       - name: Build and push sparkpy
         id: docker_build_sparkpy
         uses: docker/build-push-action@v2
