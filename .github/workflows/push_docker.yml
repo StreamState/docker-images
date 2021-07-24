@@ -89,7 +89,7 @@ jobs:
           context: ./adminapp
           push: true
           secrets:
-            "github_token=${{ secrets.GITHUB_TOKEN }}"
+            "github_token=${{ secrets.ACCESS_TOKEN }}"
           tags: ${{ env.DOCKER_PREFIX }}/${{ env.CONTAINER }}:latest,${{ env.DOCKER_PREFIX }}/${{ env.CONTAINER }}:${{ steps.tag_version.outputs.new_tag }}
       
       - name: Build and push restapi
