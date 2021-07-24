@@ -4,6 +4,7 @@ import sys
 from streamstate_utils.generic_wrapper import (
     dev_file_wrapper,
     write_console,
+    write_json,
 )
 import os
 from process import process
@@ -11,6 +12,7 @@ import json
 from streamstate_utils.structs import FileStruct, InputStruct
 from streamstate_utils.utils import get_folder_location
 from pathlib import Path
+import shutil
 
 
 def dev_from_file(
@@ -25,8 +27,16 @@ def dev_from_file(
             os.path.join(base_folder, get_folder_location(app_name, input.topic))
         ).mkdir(parents=True, exist_ok=True)
 
-    df = dev_file_wrapper(app_name, max_file_age, base_folder, process, inputs, spark)
+    output_topic = "output"
+    output_path = os.path.join(base_folder, get_folder_location(app_name, output_topic))
+    shutil.rmtree(output_path)
+    Path(output_path).mkdir(parents=True)
+
+    df = dev_file_wrapper(
+        app_name, max_file_age, base_folder, process, inputs, spark
+    ).cache()
     write_console(df, "/tmp")
+    write_json(df, app_name, base_folder, output_topic)
 
 
 # examples
