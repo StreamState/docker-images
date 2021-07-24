@@ -38,7 +38,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
-          access_id= $(curl -H "Accept: application/vnd.github.v3.raw" -L -J --header "Authorization: token ${{ secrets.ACCESS_TOKEN }}" https://api.github.com/repos/StreamState/streamstate-ui-admin/releases | jq ". | map(select(.tag_name == \"v0.0.8\"))[0].assets | map(select(.name == \"dist.zip\"))[0].id")
+          access_id=$(curl -H "Accept: application/vnd.github.v3.raw" -L -J --header "Authorization: token ${{ secrets.ACCESS_TOKEN }}" https://api.github.com/repos/StreamState/streamstate-ui-admin/releases | jq ". | map(select(.tag_name == \"v0.0.8\"))[0].assets | map(select(.name == \"dist.zip\"))[0].id")
           curl -H "Accept: application/vnd.github.v3.raw" -L -J --header "Authorization: token ${{ secrets.ACCESS_TOKEN }}" https://api.github.com/repos/StreamState/streamstate-ui-admin/releases/assets/$asset_id -o dist.zip
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
