@@ -7,7 +7,7 @@ ARG SPARK_VERSION=3.1.1
 USER root
 RUN groupadd -r -g 999 sparkpy && useradd -r -g sparkpy -u 999 sparkpy
 
-RUN pip3 install streamstate-utils==0.10.0
+RUN pip3 install streamstate-utils==0.12.0
 RUN pip3 install pyspark==${SPARK_VERSION}
 RUN chown -R sparkpy:sparkpy $SPARK_HOME
 USER sparkpy
