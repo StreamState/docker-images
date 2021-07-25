@@ -29,7 +29,9 @@ def dev_from_file(
 
     output_topic = "output"
     output_path = os.path.join(base_folder, get_folder_location(app_name, output_topic))
-    shutil.rmtree(output_path)
+    dirpath = Path(output_path)
+    if dirpath.exists() and dirpath.is_dir():
+        shutil.rmtree(output_path)
     Path(output_path).mkdir(parents=True)
 
     df = dev_file_wrapper(
