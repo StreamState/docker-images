@@ -1,15 +1,15 @@
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession, DataFrame
 from typing import List
 import sys
 from streamstate_utils.generic_wrapper import (
     dev_file_wrapper,
-    write_console,
+    write_wrapper,
     write_json,
 )
 import os
 from process import process
 import json
-from streamstate_utils.structs import FileStruct, InputStruct
+from streamstate_utils.structs import FileStruct, InputStruct, OutputStruct
 from streamstate_utils.utils import get_folder_location
 from pathlib import Path
 import shutil
@@ -19,6 +19,7 @@ def dev_from_file(
     app_name: str,
     max_file_age: str,
     inputs: List[InputStruct],
+    num_rows_to_print: int = 10,
 ):
     spark = SparkSession.builder.appName(app_name).getOrCreate()
     base_folder = "."
@@ -34,11 +35,15 @@ def dev_from_file(
         shutil.rmtree(output_path)
     Path(output_path).mkdir(parents=True)
 
-    df = dev_file_wrapper(
-        app_name, max_file_age, base_folder, process, inputs, spark
-    ).cache()
-    write_console(df, "/tmp")
-    write_json(df, app_name, base_folder, output_topic)
+    df = dev_file_wrapper(app_name, max_file_age, base_folder, process, inputs, spark)
+
+    def dual_write(batch_df: DataFrame):
+        batch_df.persist()
+        batch_df.show(num_rows_to_print)
+        write_json(batch_df, app_name, base_folder, output_topic)
+
+    output = OutputStruct(mode="append")
+    write_wrapper(df, output, "/tmp", dual_write)
 
 
 # examples
