@@ -13,6 +13,17 @@ from streamstate_utils.structs import FileStruct, InputStruct, OutputStruct
 from streamstate_utils.utils import get_folder_location
 from pathlib import Path
 import shutil
+import time
+
+
+def _rename_files(path: str):
+    for f in os.listdir(path):
+        _, f_ext = os.path.splitext(f)
+        time_since_epoch = time.time_ns()
+        # if f_ext == ".json":
+        #    new_name = "{}{}".format(f_name, f_ext)
+        new_name = f"{time_since_epoch}{f_ext}"
+        os.rename(f, new_name)
 
 
 def dev_from_file(
@@ -24,9 +35,9 @@ def dev_from_file(
     spark = SparkSession.builder.appName(app_name).getOrCreate()
     base_folder = "."
     for input in inputs:
-        Path(
-            os.path.join(base_folder, get_folder_location(app_name, input.topic))
-        ).mkdir(parents=True, exist_ok=True)
+        folder = os.path.join(base_folder, get_folder_location(app_name, input.topic))
+        Path(folder).mkdir(parents=True, exist_ok=True)
+        _rename_files(folder)
 
     output_topic = "output"
     output_path = os.path.join(base_folder, get_folder_location(app_name, output_topic))
