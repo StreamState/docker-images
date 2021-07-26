@@ -20,10 +20,8 @@ def _rename_files(path: str):
     for f in os.listdir(path):
         _, f_ext = os.path.splitext(f)
         time_since_epoch = time.time_ns()
-        # if f_ext == ".json":
-        #    new_name = "{}{}".format(f_name, f_ext)
         new_name = f"{time_since_epoch}{f_ext}"
-        os.rename(f, new_name)
+        os.rename(os.path.join(path, f), os.path.join(path, new_name))
 
 
 def dev_from_file(
