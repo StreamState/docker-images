@@ -68,8 +68,6 @@ if __name__ == "__main__":
     ] = sys.argv
     file_info = FileStruct(**json.loads(file_struct))
     input_info = [InputStruct(**v) for v in json.loads(input_struct)]
-    print("Loading file_info", file_info)
-    print("loading input_info", input_info)
     dev_from_file(
         app_name,
         file_info.max_file_age,
