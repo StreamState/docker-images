@@ -7,8 +7,6 @@ RUN groupadd -r -g 999 sparkpy && useradd -r -g sparkpy -u 999 sparkpy
 RUN pip3 install streamstate-utils==0.14.0
 RUN mkdir -p /etc/metrics/conf
 COPY sparkstreaming/metrics.properties $SPARK_HOME/conf/metrics.properties
-#COPY sparkstreaming/prometheus.yaml /etc/metrics/conf
-
 
 # Setup dependencies for Google Cloud Storage access.
 RUN rm $SPARK_HOME/jars/guava-14.0.1.jar
