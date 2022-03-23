@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+### https://github.com/lightbend/spark-history-server-docker/blob/master/entrypoint.sh
 
 # echo commands to the terminal output
 set -ex
